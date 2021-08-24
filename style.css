@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+    --cfp-dark: #363537;
+    --cfp-white: #F2F5FF;
+    --cfp-red: #F03A47;
+    --cfp-blue: #009DD5;
+    --cfp-yellow: #FFFB46;
+    --cfp-turquoise: #55d6c2;
+    --cfp-green: #5BBA6F;
+    --cfp-unimportant: #acacac;
+    --cfp-darkyellow: #858500;
+    background-color: var(--cfp-dark);
+    color: var(--cfp-white);
+}
+
+body {
+    margin: 0;
+}
+
+
+
+.buttonGrid {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+}
+
+.calcButton {
+    filter: brightness(0.85);
+    /* padding-bottom: 10vh; */
+    height: 12vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: none;
+}
+
+.calcButton:hover,
+.calcButton:focus {
+    filter: brightness(0.80);
+}
+
+#calculation {
+    font-size: 30px;
+    margin-top: 20px;
+}
+
+#calculationSmall {
+    position: absolute;
+}
+
+.calculationContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bgBlue {
+    background-color: var(--cfp-blue);
+}
