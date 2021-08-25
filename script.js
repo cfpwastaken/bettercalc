@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var calculationSmall = document.getElementById("calculationSmall");
     var calculation = document.getElementById("calculation");
     var buttons = document.getElementsByClassName("calcButton");
+    var lastOperator = false;
     for (let i = 0; i < buttons.length; i++) {
         const button = buttons[i];
         button.addEventListener("click", () => {
@@ -27,21 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(!calculation.innerText.substring(0, calculation.innerText.length - 1)) {
                     calculation.innerText += button.innerText;
                 }
-            } else if(button.innerText == "+") {
-                calculationSmall.innerText += " " + calculation.innerText + " + ";
-                calculation.innerText = "0";
-            } else if(button.innerText == "-") {
-                calculationSmall.innerText += " " + calculation.innerText + " - ";
-                calculation.innerText = "0";
-            } else if(button.innerText == "*") {
-                calculationSmall.innerText += " " + calculation.innerText + " * ";
-                calculation.innerText = "0";
-            } else if(button.innerText == "/") {
-                calculationSmall.innerText += " " + calculation.innerText + " / ";
-                calculation.innerText = "0";
-            } else if(button.innerText == "%") {
-                calculationSmall.innerText += " " + calculation.innerText + " % ";
-                calculation.innerText = "0";
+            } else if(button.innerText == "+" || button.innerText == "-" || button.innerText == "*" || button.innerText == "/" || button.innerText == "%") {
+                if(lastOperator == true) {
+                    calculationSmall.innerText = calculationSmall.innerText.substring(0, calculationSmall.innerText.length - 1);
+                    calculationSmall.innerText += " " + button.innerText;
+                } else {
+                    lastOperator = true;
+                    calculationSmall.innerText += " " + calculation.innerText + " " + button.innerText;
+                    calculation.innerText = "0";
+                }
             } else if(button.innerText == "+-") {
                 if(calculation.innerText.startsWith("-")) {
                     calculation.innerText = calculation.innerText.substring(1, calculation.innerText.length);
@@ -58,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 calculation.innerText = calc(calculationSmall.innerText);
                 calculationSmall.innerText = calculationSmall.innerText.replaceAll(".", ",") + " = ";
             } else {
+                lastOperator = false;
                 calculation.innerText += button.innerText;
             }
             if(calculation.innerText == "") {
@@ -77,11 +73,12 @@ function calc(str) {
     var stuff = str.split(/\s/g);
     var temp = [];
     var result = 0;
+    var remainder = 0;
 
     for (let i = 0; i < stuff.length; i++) {
         const elmnt = stuff[i];
         if(elmnt == "*" || elmnt == "/" || elmnt == "%") {
-            temp.push(stuff[i - 1]);
+            if(temp.length == 0) temp.push(stuff[i - 1]);
             temp.push(stuff[i]);
             temp.push(stuff[i + 1]);
         }
@@ -89,26 +86,29 @@ function calc(str) {
     for (let i = 0; i < stuff.length; i++) {
         const elmnt = stuff[i];
         if(elmnt == "+" || elmnt == "-") {
-            temp.push(stuff[i - 1]);
+            if(temp.length == 0) temp.push(stuff[i - 1]);
             temp.push(stuff[i]);
             temp.push(stuff[i + 1]);
         }
     }
     stuff = temp;
+    result = temp[0];
 
     for (let i = 0; i < stuff.length; i++) {
         if(stuff[i] == "+") {
-            result += Number(stuff[i - 1]) + Number(stuff[i + 1]);
+            result = Number(result) + Number(stuff[i + 1]);
         } else if(stuff[i] == "-") {
-            result += Number(stuff[i - 1]) - Number(stuff[i + 1]);
+            result = Number(result) - Number(stuff[i + 1]);
         } else if(stuff[i] == "*") {
-            result += Number(stuff[i - 1]) * Number(stuff[i + 1]);
+            result = Number(result) * Number(stuff[i + 1]);
         } else if(stuff[i] == "/") {
-            result += Number(stuff[i - 1]) / Number(stuff[i + 1]);
+            result = Number(result) / Number(stuff[i + 1]);
+            remainder = Number(stuff[i - 1]) % Number(stuff[i + 1]);    
         } else if(stuff[i] == "%") {
-            result += Number(stuff[i - 1]) % Number(stuff[i + 1]);
+            result = Number(result) % Number(stuff[i + 1]);
         }
     }
 
-    return result;
+    if(remainder == 0) return result;
+    else return result + " R" + remainder + "";
 }
